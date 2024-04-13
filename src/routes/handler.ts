@@ -3,6 +3,7 @@ import { dir2route } from "dir2route";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileTransfer } from "./file-transfer.js";
+import { parseUrl } from "../lib/parseUrl.js";
 
 const routes = async () => {
   const pageRoutes = await dir2route();
@@ -17,9 +18,10 @@ export async function requestHandler(
   req: IncomingMessage,
   res: ServerResponse<IncomingMessage>
 ) {
-  const handler = (await routes())[req.url];
+  const parsedUrl = parseUrl(req)
+  const handler = (await routes())[parsedUrl.pathname];
   if (handler) {
-    handler(req, res);
+    handler(req, res, parsedUrl);
   } else {
     res.writeHead(404, { "Content-Type": "text/html" });
     const path = join(process.cwd(), "public", "404.html");

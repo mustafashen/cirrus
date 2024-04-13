@@ -2,7 +2,7 @@ import { readdir, watch } from "fs/promises"
 import { createNecessaryDirs } from "./createNecessaryDirs.js"
 import { storage } from "./constants.js"
 
-function readStorageDirectory(ws) {
+function sendStorageDirectoryState(ws) {
   readdir(storage).then(files => {
     ws.send(JSON.stringify(files))
   })
@@ -11,11 +11,11 @@ function readStorageDirectory(ws) {
 export async function watchStorage(ws) {
   try {
     await createNecessaryDirs(storage)
-    readStorageDirectory(ws)
+    sendStorageDirectoryState(ws)
     const watcher = watch(storage, {recursive: true})
     console.log('Initiated watcher for storage dir')
     for await (const event of watcher) {
-      readStorageDirectory(ws)
+      sendStorageDirectoryState(ws)
     }
   } catch (error) {
     if (error instanceof Error) {

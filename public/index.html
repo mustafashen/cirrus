@@ -6,6 +6,37 @@
   <title>Index</title>
 </head>
 <body>
-  Index
+  <div id="files-list"></div>
 </body>
+<script>
+  const ws = new WebSocket('ws://localhost:3000')
+
+  const fileList = document.getElementById('files-list')
+  ws.onopen = () => {
+    console.log('WebSocket connected')
+  }
+
+  ws.onmessage = (event) => {
+    
+    const files = JSON.parse(event.data)
+
+    const ul = document.createElement('ul')
+    files.forEach(file => {
+      const a = document.createElement('a')
+      a.href = `/download?file=${file}`
+      a.innerText = file
+      const li = document.createElement('li')
+      li.appendChild(a)
+      ul.appendChild(li)
+    })
+
+    fileList.replaceChildren(ul)
+  }
+
+  ws.onclose = () => {
+    console.log('WebSocket disconnected')
+  } 
+
+
+</script>
 </html>
