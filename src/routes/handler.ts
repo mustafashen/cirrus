@@ -1,27 +1,28 @@
-import {IncomingMessage, ServerResponse} from "node:http";
-import {dir2route} from 'dir2route'
+import { IncomingMessage, ServerResponse } from "node:http";
+import { dir2route } from "dir2route";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { fileTransfer } from "./file-transfer";
-
+import { fileTransfer } from "./file-transfer.js";
 
 const routes = async () => {
-  const pageRoutes = await dir2route()
+  const pageRoutes = await dir2route();
 
   return {
     ...pageRoutes,
-    ...fileTransfer
-  }
-}
+    ...fileTransfer,
+  };
+};
 
-export async function routeHandler(req: IncomingMessage, res: ServerResponse<IncomingMessage>) {
-  console.log(req.headers)
-  const handler = (await routes())[req.url]
+export async function requestHandler(
+  req: IncomingMessage,
+  res: ServerResponse<IncomingMessage>
+) {
+  const handler = (await routes())[req.url];
   if (handler) {
-    handler(req, res)
+    handler(req, res);
   } else {
     res.writeHead(404, { "Content-Type": "text/html" });
     const path = join(process.cwd(), "public", "404.html");
-    res.end((await readFile(path, "utf-8")));
+    res.end(await readFile(path, "utf-8"));
   }
 }

@@ -1,16 +1,28 @@
-import { writeFile } from "fs/promises";
+import { FileTypeResult } from "file-type";
+import { writeFile, access, mkdir } from "fs/promises";
 import { join } from "path";
+import { createNecessaryDirs } from "./createNecessaryDirs.js";
+import { storage } from "./constants.js";
 
-const storage = join(process.cwd(), "storage")
-export async function saveBuffer(buffer: Buffer, format: {format: string}) {
+export async function saveBuffer(
+  buffer: Buffer,
+  fileType: FileTypeResult
+) {
   try {
-    await writeFile(join(storage, `${Date.now()}.${format.format}`), buffer)
+    await createNecessaryDirs(storage);
+
+    await writeFile(
+      join(storage, `${Date.now()}.${fileType.ext}`),
+      buffer
+    );
+    
     return {
       success: true,
-      message: "File saved successfully"
+      message: "File saved successfully",
     }
+    
   } catch (error: unknown) {
-    if (error instanceof Error) throw new Error(error.message)
-    throw new Error('Error during saving file')
+    if (error instanceof Error) throw new Error(error.message);
+    throw new Error("Error during saving file");
   }
 }

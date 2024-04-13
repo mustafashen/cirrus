@@ -1,18 +1,9 @@
+import { fileTypeFromBuffer } from "file-type"
 
-const bufferFormatMagicNumbers = {
-  'ffd8ffe0': 'jpeg',
-  '89504e47': 'png',
-  '52494646': 'webp',
-};
-
-export function bufferType(buffer: Buffer) {
+export async function bufferType(buffer: Buffer) {
   try {
-    const magicNumber = buffer.toString('hex', 0, 4).toLocaleLowerCase()
-
-    if (bufferFormatMagicNumbers[magicNumber]) {
-      return {format: bufferFormatMagicNumbers[magicNumber]}
-    }
-
+    const fileType = await fileTypeFromBuffer(buffer)
+    return fileType    
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(error.message)
