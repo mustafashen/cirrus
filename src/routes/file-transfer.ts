@@ -9,7 +9,7 @@ export const fileTransfer = {
     res: ServerResponse<IncomingMessage>
   ) => {
     try {
-      if (req.method !== "POST" && req.headers.multipart !== "form-data")
+      if (req.method !== "POST" || req.headers.multipart !== "form-data")
         throw new Error("Method not allowed");
 
       const buffer = await stream2buffer(req);
