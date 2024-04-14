@@ -1,4 +1,4 @@
-# This Node.js application implements a file upload and synchronization system. Here's how it works:
+# Node.js file upload and synchronization app.
 
 - File Upload: Users can upload files through HTTP requests.
 - Buffering and Storage: Uploaded files are temporarily stored in memory buffers before being written to a designated storage directory.
