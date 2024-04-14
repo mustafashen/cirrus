@@ -8,5 +8,5 @@
 
 # Key Points:
 
-- This is a custom-built solution using pure Node.js, avoiding external libraries for core functionalities.
+- This is a custom-built solution using pure Node.js, avoiding external libraries as much as possible for core functionalities.
 - The focus is on efficient file handling and real-time updates through WebSockets.
