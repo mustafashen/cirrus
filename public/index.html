@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Index</title>
   <style>
+    main {
+      width: 600px;
+      margin: auto;
+      padding: 20px 0 0 0;
+    }
     #files-list {
       display: grid;
       grid-template-columns: 1;
-      width: 80vw;
-      margin: auto;
       box-sizing: border-box;
     }
     #file-list ul{
@@ -22,12 +25,32 @@
   </style>
 </head>
 <body>
-  <div id="files-list"></div>
-
-  </body>
+  <main>
+    <h1>Upload a File</h1>
+    <div>
+      <label for="file-input">Select file to upload:</label>
+      <input type="file" id="file-input" name="file-input">
+      <br>
+      <button id="upload-btn">Upload</button>
+    </div>
+    <div id="files-list"></div>
+  </main>
+</body>
 <script>
-  const ws = new WebSocket('ws://localhost:3000')
 
+  const uploadBtn = document.getElementById('upload-btn')
+
+  uploadBtn.onclick = () => {
+    const fileInput = document.getElementById('file-input')
+
+    fetch('/upload', {
+      method: 'POST',
+      body: fileInput.files[0]
+    })
+
+  }
+
+  const ws = new WebSocket('ws://localhost:3000')
   const fileList = document.getElementById('files-list')
   ws.onopen = () => {
     console.log('WebSocket connected')
@@ -67,7 +90,6 @@
   ws.onclose = () => {
     console.log('WebSocket disconnected')
   } 
-
 
 </script>
 </html>
