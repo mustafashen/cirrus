@@ -19,7 +19,8 @@ export async function requestHandler(
   res: ServerResponse<IncomingMessage>
 ) {
   const parsedUrl = parseUrl(req)
-  const handler = (await routes())[parsedUrl.pathname];
+  const route = (await routes())[parsedUrl.pathname]
+  const handler = route ? route[req.method] : undefined
   if (handler) {
     handler(req, res, parsedUrl);
   } else {
