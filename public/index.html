@@ -4,10 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Index</title>
+  <style>
+    #files-list {
+      display: grid;
+      grid-template-columns: 1;
+      width: 80vw;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    #file-list ul{
+      padding: 0px !important;
+      list-style: none;
+    }
+    #files-list img, video {
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
   <div id="files-list"></div>
-</body>
+
+  </body>
 <script>
   const ws = new WebSocket('ws://localhost:3000')
 
@@ -18,16 +35,30 @@
 
   ws.onmessage = (event) => {
     
-    const files = JSON.parse(event.data)
+    const imageComponent = (file) => {
+      return `
+        <image
+          src="/download?type=${file.type}&name=${file.name}">
+        </image>
+      `
+    }
 
+    const videoComponent = (file) => {
+      return `
+        <video
+          src="/download?type=${file.type}&name=${file.name}"
+          controls="true"
+          type="${file.mime}"
+          >
+        </video>
+      `
+    }
+
+    const files = JSON.parse(event.data)
     const ul = document.createElement('ul')
     files.forEach(file => {
-      const a = document.createElement('a')
-      a.href = `/download?file=${file}`
-      a.innerText = file
-      const li = document.createElement('li')
-      li.appendChild(a)
-      ul.appendChild(li)
+      if (file.type === 'image') ul.insertAdjacentHTML("beforeend", imageComponent(file))
+      else if (file.type === 'video') ul.insertAdjacentHTML("beforeend", videoComponent(file))
     })
 
     fileList.replaceChildren(ul)
