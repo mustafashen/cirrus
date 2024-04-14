@@ -16,7 +16,7 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "dir2route": "^1.0.1",
+    "dir2route": "^1.0.2",
     "file-type": "^19.0.0",
     "ws": "^8.16.0"
   }
